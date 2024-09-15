@@ -4,7 +4,7 @@
  * Lab 2 - Exceptions
  * Main Driver class
  * Name: Alexander Kruschka
- * Last Updated: 9/11/2024
+ * Last Updated: 9/15/2024
  */
 
 package kruschkaa;
@@ -12,20 +12,24 @@ package kruschkaa;
 import java.util.Scanner;
 
 /**
- *
+ * This program takes user inputted data and creates a number of dice with
+ * a number of sides and rolls them a number of times. It adds the dice together,
+ * then counts the frequency that each total was rolled. Lastly, using this data,
+ * it displays the number of times each possible outcome was rolled.
  */
 public class Driver {
 
+    //Static Variables
     static final int MIN_DICE = 2;
     static final int MAX_DICE = 10;
 
     public static void main(String[] args) {
 
         //Variables
-        int[] input = new int[0];
+        int[] input;
         Die[] dice = new Die[0];
-        int[] rolls = new int[0];
-        int numDice;
+        int[] rolls;
+        int numDice = 0;
         int numSides = 0;
         int numRolls = 0;
         int max;
@@ -55,6 +59,8 @@ public class Driver {
         //Find max frequency from rolls
         max = findMax(rolls);
 
+        //Report or print roll totals
+        report(numDice, rolls, max);
     }
 
     /**
@@ -76,7 +82,7 @@ public class Driver {
                     Please enter the number of dice to roll, how many sides the dice have,
                     and how many rolls to complete, separating the values by a space.
                     Example: "2 6 1000"\s""");
-            System.out.println("\nEnter configuration: ");
+            System.out.print("\nEnter configuration: ");
             String userInput = scan.nextLine();
             String[] strArray = userInput.split(" ");
             //Check validity of user input
@@ -151,4 +157,21 @@ public class Driver {
         return max;
     }
 
+    /**
+     * Displays the frequency of each possible total as well as
+     * a star representation of each frequency's size rounded down to
+     * the nearest 10% compared to the largest frequency.
+     *
+     * @param numDice is the number of dice rolled during this run.
+     * @param rolls is the int array containing roll frequency information.
+     * @param max is the maximum frequency of a rolled total.
+     */
+    private static void report(int numDice, int[] rolls, int max) {
+        final int scaleconstant = 10;
+        int scale = max / scaleconstant;
+        for (int i = 0; i < rolls.length; i++) {
+            int numStars = rolls[i] / scale;
+            System.out.printf("%-2d%s%-9d%-9s%n", i+numDice, ":", rolls[i], "*".repeat(numStars));
+        }
+    }
 }

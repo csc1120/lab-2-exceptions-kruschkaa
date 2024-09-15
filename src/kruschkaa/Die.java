@@ -4,7 +4,7 @@
  * Lab 2 - Exceptions
  * Die class
  * Name: Alexander Kruschka
- * Last Updated: 9/11/2024
+ * Last Updated: 9/15/2024
  */
 
 package kruschkaa;
@@ -26,7 +26,7 @@ public class Die {
      * Maximum sides a die may be initialized to.
      */
     public static final int MAX_SIDES = 100;
-    private int currentValue;
+    private int currentValue = 0;
     private final int numSides;
     private final Random random = new Random();
 
@@ -42,14 +42,14 @@ public class Die {
 
     //Methods
     /**
-     * Checks if current value is within range of die,
-     * if yes, returns the value, else will throw exception.
+     * Checks if the die has been rolled yet, if yes,
+     * returns the value, else will throw exception.
      *
      * @return currentValue of die if value is legal.
      * @throws DieNotRolledException if current value is not legal.
      */
     public int getCurrentValue() {
-        if (currentValue > 0) {
+        if (currentValue > 0 && currentValue <= numSides) {
             int tempValue = currentValue;
             currentValue = 0;
             return tempValue;

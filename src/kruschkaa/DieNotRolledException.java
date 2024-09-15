@@ -4,7 +4,7 @@
  * Lab 2 - Exceptions
  * DieNotRolledException class
  * Name: Alexander Kruschka
- * Last Updated: 9/11/2024
+ * Last Updated: 9/15/2024
  */
 
 package kruschkaa;
@@ -17,6 +17,6 @@ package kruschkaa;
 public class DieNotRolledException extends RuntimeException {
 
     public String getMessage() {
-        return "Error, die has not been rolled and outside of possible range.";
+        return "Error, die has not been rolled or is outside of possible range.";
     }
 }
