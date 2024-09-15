@@ -167,10 +167,17 @@ public class Driver {
      * @param max is the maximum frequency of a rolled total.
      */
     private static void report(int numDice, int[] rolls, int max) {
+        //Scale is how many rolls is 10% of the max
         final int scaleconstant = 10;
         int scale = max / scaleconstant;
+        int numStars;
         for (int i = 0; i < rolls.length; i++) {
-            int numStars = rolls[i] / scale;
+            try {
+                //Number of asterisks for a value is the number of rolls divided by the scale
+                numStars = rolls[i] / scale;
+            } catch (ArithmeticException e) {
+                numStars = 0;
+            }
             System.out.printf("%-2d%s%-9d%-9s%n", i+numDice, ":", rolls[i], "*".repeat(numStars));
         }
     }
