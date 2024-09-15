@@ -28,7 +28,7 @@ public class Die {
     public static final int MAX_SIDES = 100;
     private int currentValue;
     private final int numSides;
-    private Random random;
+    private final Random random = new Random();
 
     //Constructor
     Die(int numSides) {
@@ -49,7 +49,7 @@ public class Die {
      * @throws DieNotRolledException if current value is not legal.
      */
     public int getCurrentValue() {
-        if (currentValue <= numSides && currentValue >= MIN_SIDES) {
+        if (currentValue > 0) {
             int tempValue = currentValue;
             currentValue = 0;
             return tempValue;
@@ -63,6 +63,6 @@ public class Die {
      * within range of dice sides.
      */
     public void roll() {
-        currentValue = random.nextInt(MIN_SIDES, numSides + 1);
+        currentValue = random.nextInt(1, numSides + 1);
     }
 }

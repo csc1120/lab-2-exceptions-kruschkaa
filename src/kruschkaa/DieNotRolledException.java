@@ -19,5 +19,4 @@ public class DieNotRolledException extends RuntimeException {
     public String getMessage() {
         return "Error, die has not been rolled and outside of possible range.";
     }
-
 }

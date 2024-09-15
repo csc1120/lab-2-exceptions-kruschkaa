@@ -21,25 +21,39 @@ public class Driver {
 
     public static void main(String[] args) {
 
+        //Variables
         int[] input = new int[0];
-        Die[] dice;
+        Die[] dice = new Die[0];
+        int[] rolls = new int[0];
+        int numDice;
+        int numSides = 0;
+        int numRolls = 0;
+        int max;
 
+        //Acquire a valid input of dice, sides, and total rolls
         boolean validInput = false;
         while (!validInput) {
             input = getInput();
-            if (input[0] < MIN_DICE || input[0] > MAX_DICE) {
-                System.out.println("Bad die creation: Illegal number of die: " + input[0]);
-            } else {
+            numDice = input[0];
+            numSides = input[1];
+            numRolls = input[2];
+            if (numDice >= MIN_DICE && numDice <= MAX_DICE) {
                 try {
-                    dice = createDice(input[0], input[1]);
+                    dice = createDice(numDice, numSides);
                     validInput = true;
                 } catch (IllegalArgumentException e) {
                     System.out.println(e.getMessage());
                 }
+            } else {
+                System.out.println("Bad die creation: Illegal number of die: " + input[0]);
             }
         }
 
+        //Roll the dice per user input
+        rolls = rollDice(dice, numSides, numRolls);
 
+        //Find max frequency from rolls
+        max = findMax(rolls);
 
     }
 
@@ -50,23 +64,26 @@ public class Driver {
      */
     private static int[] getInput() {
 
+        //Variables
         Scanner scan = new Scanner(System.in);
         int[] intArray = new int[3];
         boolean isValid = false;
 
+        //Gather valid user input
         while (!isValid) {
+            //Get user input
             System.out.println("""
                     Please enter the number of dice to roll, how many sides the dice have,
                     and how many rolls to complete, separating the values by a space.
                     Example: "2 6 1000"\s""");
-
             System.out.println("\nEnter configuration: ");
             String userInput = scan.nextLine();
             String[] strArray = userInput.split(" ");
-
+            //Check validity of user input
             try {
                 if (strArray.length != 3) {
-                    throw new ArrayIndexOutOfBoundsException();
+                    throw new IllegalArgumentException("Invalid input: " +
+                            "Expected 3 values but received " + strArray.length);
                 }
                 for (int i = 0; i < intArray.length; i++) {
                     intArray[i] = Integer.parseInt(strArray[i]);
@@ -74,12 +91,10 @@ public class Driver {
                 isValid = true;
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input: All values must be whole numbers.");
-            } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println("Invalid input: " +
-                        "Expected 3 values but received " + strArray.length);
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
             }
         }
-
         return intArray;
     }
 
@@ -91,11 +106,49 @@ public class Driver {
      * @return an array of Die based on input.
      */
     private static Die[] createDice(int numDice, int numSides) {
-        Die[] die = new Die[numDice];
+        Die[] dice = new Die[numDice];
         for (int i = 0; i < numDice; i++) {
-            die[i] = new Die(numSides);
+            dice[i] = new Die(numSides);
         }
-        return die;
+        return dice;
+    }
+
+    /**
+     * Takes in an array of dice and rolls them a user specified number of times,
+     * finding their total, and then counts the frequency of each roll total,
+     * returning the frequency results as an integer array.
+     *
+     * @param dice is the array of die to be rolled.
+     * @param numSides is the number of sides on each die.
+     * @param numRolls is the number of times to roll the dice.
+     * @return array containing frequency of rolls for each possible output.
+     */
+    private static int[] rollDice(Die[] dice, int numSides, int numRolls) {
+        int[] totals = new int[(dice.length * numSides) - (dice.length - 1)];
+        for (int currentRoll = 0; currentRoll < numRolls; currentRoll++) {
+            int total = 0;
+            for (Die die : dice) {
+                die.roll();
+                total += die.getCurrentValue();
+            }
+            totals[total - dice.length] += 1;
+        }
+        return totals;
+    }
+
+    /**
+     * Takes in an integer array and returns the largest integer in the array.
+     * @param rolls is the array of roll total frequency to be analyzed.
+     * @return the largest integer in the array.
+     */
+    private static int findMax(int[] rolls) {
+        int max = 0;
+        for (int roll : rolls) {
+            if (roll > max) {
+                max = roll;
+            }
+        }
+        return max;
     }
 
 }
